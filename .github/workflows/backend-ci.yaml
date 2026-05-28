@@ -5,6 +5,6 @@ jobs:
  build:
   runs-on: ubuntu-latest
   steps:
-  -name: Print message
-   run: echo "Hello Github Actions"
+  - name: Print message
+    run: echo "Hello Github Actions"
 
