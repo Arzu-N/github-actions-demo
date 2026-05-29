@@ -13,14 +13,17 @@ jobs:
     with:
      java-version: '21'
      distribution: 'temurin'
+  - name: Cache gradle dependencies
+    uses: actions/cache@v4
+    with:
+     path: |
+      ~/.gradle/caches
+      ~/.gradle/wrapper
+     key: gradle-${{runner.os}}-${{hashFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
+     restore-key: gradle-${{runner.os}}-
   - name: Make gradlew executable
     run: chmod +x gradlew
   - name: Build project
     run: ./gradlew build
-  - name: Upload build artifact
-    uses: actions/upload-artifact@v4
-    with:
-     name: app-build
-     path: app/build/libs/
-    
+     
 
