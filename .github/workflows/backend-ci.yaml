@@ -20,7 +20,7 @@ jobs:
   - name: Upload build artifact
     uses: actions/build-artifact@v4
     with:
-     - name: app-build
-       path: app/build/libs/
-    run: echo "Hello Github Actions"
+     name: app-build
+     path: app/build/libs/
+    
 
