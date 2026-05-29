@@ -1,10 +1,26 @@
 name: Backend Ci
 on:
  push:
+ pull_request:
 jobs:
  build:
   runs-on: ubuntu-latest
   steps:
-  - name: Print message
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Setup java
+    uses: actions/setup-java@v4
+    with:
+     java-version: '21'
+     distribution: 'temurin'
+  - name: Make gradlew executable
+    run: chmod +x gradlew
+  - name: Build project
+    run: ./gradlew build
+  - name: Upload build artifact
+    uses: actions/build-artifact@v4
+    with:
+     - name: app-build
+       path: app/build/libs/
     run: echo "Hello Github Actions"
 
