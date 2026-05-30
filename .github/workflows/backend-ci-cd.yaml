@@ -1,0 +1,28 @@
+name: Backend-ci-cd
+on: 
+ push:
+  branches:
+   -main
+jobs:
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   - name: Checkout project
+     uses: actions/checkout@v4
+   - name: Setup Java
+     uses: actions/setup-java@v4
+     with:
+      java-version: '21'
+      distribution: 'temurin'
+   - name: Make gradlew executable
+     run: chmod +x gradlew
+   - name: Run tests
+     run: ./gradlew test
+   - name: Build project
+     run: ./gradlew build
+ deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+   - name: Trigger Render deploy
+     run: curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}
