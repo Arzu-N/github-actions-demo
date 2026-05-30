@@ -1,8 +1,0 @@
-name: Backend CI
-on: push
-jobs:
- build:
-  runs-on: ubuntu-latest
-   steps:
-    -name: Print message
-     run: echo "hello github Actions"

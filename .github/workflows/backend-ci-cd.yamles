@@ -20,12 +20,11 @@ jobs:
      run: ./gradlew test
    - name: Build project
      run: ./gradlew build
-   - name: Build Docker Image
+   - name: Build Docker image
      run: docker build -t github-actions-demo .
-
- deploy:
-  needs: build
-  runs-on: ubuntu-latest
+  deploy:
+   needs: build
+   runs-on: ubuntu-latest
   steps:
    - name: Trigger Render deploy
      run: curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}
