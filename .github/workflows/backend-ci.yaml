@@ -24,7 +24,7 @@ jobs:
      key: gradle-${{runner.os}}-${{hashFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
      restore-key: gradle-${{runner.os}}-
   - name: Use secret safetly
-    run: echo "DB password is hidden ${{secret.DB_PASSWORD}}"
+    run: echo "DB password is hidden ${{secrets.DB_PASSWORD}}"
   - name: Make gradlew executable
     run: chmod +x gradlew
   - name: Build project
