@@ -3,8 +3,8 @@ on:     # o demekdirki bu workflow main brancha push eden zaman isleyecek
  push:
   branches:
    - main
-jobs:       //workflowda olan isleri jobs bolumune yaziriq
- build: # jobsun adidir build
+jobs:       #workflowda olan isleri jobs bolumune yaziriq
+ build:     # jobsun adidir build
   runs-on: ubuntu-latest    #githubda isleyecek runnerdi,bizim kodlarimiz  workflow ise dusende
    # githubda bir muveqqeti serverde ise dusur ve burada ubuntu-latest o demekdirki hemin serverde
     #olacaq OS ubuntudur,workflow bitdikden sonra melumatlar oradan silinir
