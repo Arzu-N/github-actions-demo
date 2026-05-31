@@ -10,6 +10,15 @@ jobs:
    - name: Checkout project
      uses: actions/checkout@v4
 
+   - name: Cache Gradle dependencies
+     uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.grradle/wrapper
+        key: gradle-${{runner.os}}-${{hasFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
+        restore-key: gradle-${{runner.os}}-
+
    - name: Setup Java
      uses: actions/setup-java@v4
      with:
@@ -21,6 +30,15 @@ jobs:
 
    - name: Run tests
      run: ./gradlew test
+
+   - name: Build project
+     run: ./gradlew build
+
+   - name: Upload build artifact
+     uses: actions/upload-artifact@v4
+     with:
+      name: spring-boot-app
+      path: build/libs/*.jar
 
 
    - name: Login github
@@ -34,6 +52,7 @@ jobs:
 
    - name: Push docker image
      run: docker push arzuu1/github-actions-demo
+
 
  deploy:
   needs: build
