@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 COPY . .
-RUN chmod +x gradlew & ./gradlew build
+RUN chmod +x gradlew && ./gradlew build
 
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
