@@ -16,7 +16,7 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: gradle-${{runner.os}}-${{hasFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
+        key: gradle-${{runner.os}}-${{hashFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
         restore-key: gradle-${{runner.os}}-
 
    - name: Setup Java
