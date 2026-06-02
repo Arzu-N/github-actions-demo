@@ -1,0 +1,22 @@
+name: set-version
+description: set-version
+inputs:
+  version:
+    description: "App version"
+    required: true
+outputs:
+  version:
+   description: Returned version
+   value: ${{ steps.set-version.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set version
+      id: set-version
+      shell: bash
+      run: echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+    - name: Print version
+      id: print-version
+      shell: bash
+      run: echo ${{ inputs.version }}

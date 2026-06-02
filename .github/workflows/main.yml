@@ -1,0 +1,31 @@
+name: main.yml
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Deploy environment"
+        required: true
+      version:
+        description: "App version"
+        required: true
+
+
+jobs:
+ build:
+  uses: ./.github/workflows/build.yml
+  with:
+    version: ${{ github.event.inputs.version }}
+
+ deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Deploy app
+      run: |
+        echo ${{ needs.build.outputs.artifact_version }}
+        echo "Environment ${{ github.event.inputs.env }}"
+         
+         
+         
+         
+         

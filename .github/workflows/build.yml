@@ -1,0 +1,25 @@
+name: build.yml
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+    outputs:
+     artifact_version:
+       value: ${{ jobs.build.outputs.version }}
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use composite action
+        id: set-version
+        uses: ./.github/actions/set-version
+        with:
+          version: ${{ inputs.version }}
