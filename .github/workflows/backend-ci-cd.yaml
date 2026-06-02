@@ -1,92 +1,94 @@
-#name: Backend-ci-cd
-#on:     # o demekdirki bu workflow main brancha push eden zaman isleyecek
-# push:
-#  branches:
-#   - main
-#jobs:       #workflowda olan isleri jobs bolumune yaziriq
-# build:     # jobsun adidir build
-#  runs-on: ubuntu-latest    #githubda isleyecek runnerdi,bizim kodlarimiz  workflow ise dusende
-#   # githubda bir muveqqeti serverde ise dusur ve burada ubuntu-latest o demekdirki hemin serverde
-#    #olacaq OS ubuntudur,workflow bitdikden sonra melumatlar oradan silinir
-#  steps:         # build jobsunun addimlari
-#   - name: Checkout project    #menim repom githubun runnerinie clone edilir,menim kodlarim hemin runnerda
-#    #olmus olur
-#     uses: actions/checkout@v4    #uses hazir action(hazir yazilmis kod) istifade edende istifade olunur
-#
-#   - name: Cache Gradle dependencies
-#     uses: actions/cache@v4  #workflow icra olunub bitende runnerda ne varsa silinir,neticede her defe
-#       #push edende  layihedeki gradle dependencyler tezeden yuklenir,bunun qarsisini almaq ucun biz
-#       #o dependencyleri githabda cachde saxlayiriq ki  eger varsa birde yuklenmesin dependencylr,vaxt
-#       #aparmasin. path o demekdirki
-#     with:
-#       #path hissesinde olanlar gradle dependencylerin saxlanigi fayllardi
-#        path: |
-#          ~/.gradle/caches
-#          ~/.gradle/wrapper
-#
-#        key: gradle-${{runner.os}}-${{hashFiles('**/*.gradle*','**/gradle-wrapper.properties')}}  # key
-#       #ile biz hemin kese ad veririk,yeni bu key ile saxla bu valulari,runner.os runnerda istifade
-#       #olunan OS demekdir,hashFiles gradle-wrapper.properties,.gradle fayllarinin hasini saxlayir,yeni
-#       #eger hash deyisilse demekki hansisa yeni dependency elave olunub yaxud movcudu silinib
-#        restore-key: gradle-${{runner.os}}-    #restore key ise o demekdirki eger cachde gosterilen keye
-#          #uygun valu tapilmasa restore keye uygunn value axtar.yeni eger sadece yeni dependency elave
-#          #olunubsa cachdeki kohneleri saxla,amma elave olaraq yenileri dde yukle,yeni hamisini tezzeden
-#          #yukleme
-#
-#   - name: Setup Java
-#     uses: actions/setup-java@v4    #java 21i yukleyir runnera
-#     with:
-#      java-version: '21'
-#      distribution: 'temurin'
-#
-#   - name: Make gradlew executable
-#     run: chmod +x gradlew   # gradlew faylini executable edir ki ./gradle ile skriptleri ise
-#    #salmaq olsun,meselen test,build
-#
-#   - name: Run tests
-#     run: ./gradlew test
-#
-#   - name: Build project
-#     run: ./gradlew build
-#
-#   - name: Upload build artifact
-#     uses: actions/upload-artifact@v4  #build neticesinde yaranmis artifacti githuba yukleyir,actions
-#     #bolmesinde asagida hemin artifact gorunur
-#     with:
-#      name: spring-boot-app  #artifacta verilecek ad
-#      path: build/libs/*.jar   #artifacti haradn gotureceyi
-#
-#
-#   - name: Login github
-#     uses: docker/login-action@v3   #hub.dockera daxil olur,secrets bolmesi githubda settins->secrets
-#     #->actions hissesine elave olunur,hansi ki burada olann valuelari hec kim gore bilmir,ekrana
-#     #yazdirdiqda ise github onlari  sifreleyir ki gorunmesin.dockerhubdaki username ve password olaraq
-#     #da dockerhubdaki setting bolmesinden token alib onu saxlayiriq secretslerde githubda.${{}} bu
-#     #icerisindeki ifadeni calisdirib onun deyerini qaytarir
-#     with:
-#      username: ${{secrets.DOCKER_USERNAME}}
-#      password: ${{secrets.DOCKER_PASSWORD}}
-#
-#   - name: Build Docker Image
-#     run: docker build -t arzuu1/github-actions-demo .
-#
-#   - name: Push docker image
-#     run: docker push arzuu1/github-actions-demo     #dockerhuba imagi push edirki,render onu oradan
-#     #oxuyub goturub deploy ede bilsin
-#
-#
-# deploy:
-#  needs: build   #needs o demekdirki birinci build jobunun bitmesini gozle eger ugurla biterse basla
-#  runs-on: ubuntu-latest
-#  steps:
-#   - name: Trigger Render deploy
-#     run: curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}    #rendere girende new->web service yaradirirq,
-#     #sonra docker image ile baglayiriq,yeni dockerhubdaki imagin adimi ora yaziriq,
-#     #renderde hemin web servisin ustune basib asagida RENDER_DEPLOY_HOOK
-#     # adli bir url verir,hansiki bu renderdeki deploy duymesinin URL-idi.Curl -X POST ile bu urle
-#     #bodysiz POST sorgusu gonderilir,neticede render qosuldugu dockerhubdaki imagi pulll edib oonu
-#       deploy edir
-#
-#
-#
-#     //composit action,outputs: oyren
+name: Backend-ci-cd
+on:     # o demekdirki bu workflow main brancha push eden zaman isleyecek
+ push:
+  branches:
+   - main
+jobs:       #workflowda olan isleri jobs bolumune yaziriq
+ build:     # jobsun adidir build
+  runs-on: ubuntu-latest    #githubda isleyecek runnerdi,bizim kodlarimiz  workflow ise dusende
+   # githubda bir muveqqeti serverde ise dusur ve burada ubuntu-latest o demekdirki hemin serverde
+    #olacaq OS ubuntudur,workflow bitdikden sonra melumatlar oradan silinir
+  steps:         # build jobsunun addimlari
+   - name: Checkout project    #menim repom githubun runnerinie clone edilir,menim kodlarim hemin runnerda
+    #olmus olur
+     uses: actions/checkout@v4    #uses hazir action(hazir yazilmis kod) istifade edende istifade olunur
+
+   - name: Cache Gradle dependencies
+     uses: actions/cache@v4  #workflow icra olunub bitende runnerda ne varsa silinir,neticede her defe
+       #push edende  layihedeki gradle dependencyler tezeden yuklenir,bunun qarsisini almaq ucun biz
+       #o dependencyleri githabda cachde saxlayiriq ki  eger varsa birde yuklenmesin dependencylr,vaxt
+       #aparmasin. path o demekdirki
+     with:
+       #path hissesinde olanlar gradle dependencylerin saxlanigi fayllardi
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+
+        key: gradle-${{runner.os}}-${{hashFiles('**/*.gradle*','**/gradle-wrapper.properties')}}
+       # key
+       #ile biz hemin kese ad veririk,yeni bu key ile saxla bu valulari,runner.os runnerda istifade
+       #olunan OS demekdir,hashFiles gradle-wrapper.properties,.gradle fayllarinin hasini saxlayir,yeni
+       #eger hash deyisilse demekki hansisa yeni dependency elave olunub yaxud movcudu silinib
+        restore-key: gradle-${{ runner.os }}-
+          #restore key ise o demekdirki eger cachde gosterilen keye
+          #uygun valu tapilmasa restore keye uygunn value axtar.yeni eger sadece yeni dependency elave
+          #olunubsa cachdeki kohneleri saxla,amma elave olaraq yenileri dde yukle,yeni hamisini tezzeden
+          #yukleme
+
+   - name: Setup Java
+     uses: actions/setup-java@v4
+     #java 21i yukleyir runnera
+     with:
+      java-version: '21'
+      distribution: 'temurin'
+
+   - name: Make gradlew executable
+     run: chmod +x gradlew   # gradlew faylini executable edir ki ./gradle ile skriptleri ise
+    #salmaq olsun,meselen test,build
+
+   - name: Run tests
+     run: ./gradlew test
+
+   - name: Build project
+     run: ./gradlew build
+
+   - name: Upload build artifact
+     uses: actions/upload-artifact@v4  #build neticesinde yaranmis artifacti githuba yukleyir,actions
+     #bolmesinde asagida hemin artifact gorunur
+     with:
+      name: spring-boot-app  #artifacta verilecek ad
+      path: build/libs/*.jar   #artifacti haradn gotureceyi
+
+
+   - name: Login github
+     uses: docker/login-action@v3   #hub.dockera daxil olur,secrets bolmesi githubda settins->secrets
+     #->actions hissesine elave olunur,hansi ki burada olann valuelari hec kim gore bilmir,ekrana
+     #yazdirdiqda ise github onlari  sifreleyir ki gorunmesin.dockerhubdaki username ve password olaraq
+     #da dockerhubdaki setting bolmesinden token alib onu saxlayiriq secretslerde githubda.${{}} bu
+     #icerisindeki ifadeni calisdirib onun deyerini qaytarir
+     with:
+      username: ${{secrets.DOCKER_USERNAME}}
+      password: ${{secrets.DOCKER_PASSWORD}}
+
+   - name: Build Docker Image
+     run: docker build -t arzuu1/github-actions-demo .
+
+   - name: Push docker image
+     run: docker push arzuu1/github-actions-demo     #dockerhuba imagi push edirki,render onu oradan
+     #oxuyub goturub deploy ede bilsin
+
+
+ deploy:
+  needs: build   #needs o demekdirki birinci build jobunun bitmesini gozle eger ugurla biterse basla
+  runs-on: ubuntu-latest
+  steps:
+   - name: Trigger Render deploy
+     run: curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}    #rendere girende new->web service yaradirirq,
+     #sonra docker image ile baglayiriq,yeni dockerhubdaki imagin adimi ora yaziriq,
+     #renderde hemin web servisin ustune basib asagida RENDER_DEPLOY_HOOK
+     # adli bir url verir,hansiki bu renderdeki deploy duymesinin URL-idi.Curl -X POST ile bu urle
+     #bodysiz POST sorgusu gonderilir,neticede render qosuldugu dockerhubdaki imagi pulll edib oonu
+       #deploy edir
+
+
+
